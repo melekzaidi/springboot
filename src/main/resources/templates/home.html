@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Centre de Formation</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 rounded">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-graduation-cap me-2"></i>Centre de Formation
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/students">
+                        <i class="fas fa-users"></i> Étudiants
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="card bg-primary text-white mb-4">
+        <div class="card-body">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Bienvenue au Centre de Formation
+            </h1>
+            <p class="lead">
+                Application de gestion des étudiants, formateurs et cours.
+            </p>
+            <a class="btn btn-light btn-lg mt-3" href="/students">
+                <i class="fas fa-rocket me-2"></i>Commencer
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-bar me-2"></i>Statistiques
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <h2 class="text-primary" th:text="${totalStudents != null ? totalStudents : 0}">0</h2>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-users me-1"></i>Étudiants
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="text-success">0</h2>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-chalkboard-teacher me-1"></i>Formateurs
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="text-info">0</h2>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-book me-1"></i>Cours
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="text-warning">0</h2>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-clipboard-check me-1"></i>Inscriptions
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-4x text-primary mb-3"></i>
+                    <h5 class="card-title">Gestion des Étudiants</h5>
+                    <p class="card-text">
+                        Gérez les inscriptions, informations et suivi académique.
+                    </p>
+                    <a href="/students" class="btn btn-primary">
+                        <i class="fas fa-arrow-right me-1"></i> Accéder
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chalkboard-teacher fa-4x text-success mb-3"></i>
+                    <h5 class="card-title">Gestion des Formateurs</h5>
+                    <p class="card-text">
+                        Gérez les formateurs et leurs spécialités.
+                    </p>
+                    <button class="btn btn-success disabled">
+                        <i class="fas fa-clock me-1"></i> Bientôt
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-book fa-4x text-info mb-3"></i>
+                    <h5 class="card-title">Gestion des Cours</h5>
+                    <p class="card-text">
+                        Créez et gérez les cours et emplois du temps.
+                    </p>
+                    <button class="btn btn-info disabled">
+                        <i class="fas fa-clock me-1"></i> Bientôt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p class="text-muted mb-0">
+                    <i class="fas fa-code me-1"></i>
+                    Développé avec Spring Boot 3, Thymeleaf & MySQL
+                    |
+                    <i class="fas fa-copyright me-1"></i>
+                    2025 Centre de Formation
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
