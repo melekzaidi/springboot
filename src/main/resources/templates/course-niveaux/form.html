@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' - Centre de Formation'">Formulaire Association Cours-Niveau</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 rounded">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-graduation-cap me-2"></i>Centre de Formation
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/course-niveaux">
+                        <i class="fas fa-link"></i> Cours-Niveaux
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a href="/course-niveaux" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+        </a>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <i class="fas fa-link me-2"></i>
+                <span th:text="${pageTitle}">Formulaire Association</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <form th:action="${courseNiveau.id != null} ?
+                                @{/course-niveaux/update/{id}(id=${courseNiveau.id})} :
+                                @{/course-niveaux/save}"
+                  th:object="${courseNiveau}"
+                  method="post"
+                  novalidate>
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="row">
+                    <!-- Cours -->
+                    <div class="col-md-6 mb-3">
+                        <label for="course" class="form-label fw-semibold">
+                            <i class="fas fa-book me-1"></i>Cours
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select"
+                                id="course"
+                                th:field="*{course}"
+                                th:classappend="${#fields.hasErrors('course')} ? 'is-invalid' : ''"
+                                required>
+                            <option value="">Sélectionner un cours</option>
+                            <option th:each="courseItem : ${courses}"
+                                    th:value="${courseItem.id}"
+                                    th:text="${courseItem.nom + ' (' + courseItem.code + ')'}"
+                                    th:selected="${courseNiveau.course != null && courseNiveau.course.id == courseItem.id}">
+                            </option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('course')}">
+                            <span th:errors="*{course}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Niveau -->
+                    <div class="col-md-6 mb-3">
+                        <label for="niveau" class="form-label fw-semibold">
+                            <i class="fas fa-layer-group me-1"></i>Niveau
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select"
+                                id="niveau"
+                                th:field="*{niveau}"
+                                th:classappend="${#fields.hasErrors('niveau')} ? 'is-invalid' : ''"
+                                required>
+                            <option value="">Sélectionner un niveau</option>
+                            <option th:each="niveauItem : ${niveaux}"
+                                    th:value="${niveauItem.id}"
+                                    th:text="${niveauItem.nom + ' (' + niveauItem.code + ')'}"
+                                    th:selected="${courseNiveau.niveau != null && courseNiveau.niveau.id == niveauItem.id}">
+                            </option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('niveau')}">
+                            <span th:errors="*{niveau}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Prix -->
+                    <div class="col-md-4 mb-3">
+                        <label for="prix" class="form-label fw-semibold">
+                            <i class="fas fa-euro-sign me-1"></i>Prix (€)
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="number"
+                               step="0.01"
+                               min="0"
+                               class="form-control"
+                               id="prix"
+                               th:field="*{prix}"
+                               th:classappend="${#fields.hasErrors('prix')} ? 'is-invalid' : ''"
+                               placeholder="Ex: 150.00"
+                               required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('prix')}">
+                            <span th:errors="*{prix}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Durée -->
+                    <div class="col-md-4 mb-3">
+                        <label for="duree" class="form-label fw-semibold">
+                            <i class="fas fa-clock me-1"></i>Durée (heures)
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="number"
+                               min="1"
+                               class="form-control"
+                               id="duree"
+                               th:field="*{duree}"
+                               th:classappend="${#fields.hasErrors('duree')} ? 'is-invalid' : ''"
+                               placeholder="Ex: 30"
+                               required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('duree')}">
+                            <span th:errors="*{duree}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Date Création -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-calendar-alt me-1"></i>Date de création
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               th:value="${#temporals.format(courseNiveau.dateCreation, 'dd/MM/yyyy')}"
+                               readonly>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label for="description" class="form-label fw-semibold">
+                        <i class="fas fa-align-left me-1"></i>Description
+                    </label>
+                    <textarea class="form-control"
+                              id="description"
+                              th:field="*{description}"
+                              rows="3"
+                              placeholder="Description spécifique à cette association..."></textarea>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                    <div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>
+                            <span th:text="${courseNiveau.id != null} ? 'Mettre à jour' : 'Enregistrer'">
+                                Enregistrer
+                            </span>
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary ms-2">
+                            <i class="fas fa-redo me-1"></i> Réinitialiser
+                        </button>
+                    </div>
+                    <a href="/course-niveaux" class="btn btn-outline-danger">
+                        <i class="fas fa-times me-1"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p class="text-muted mb-0">
+                    <i class="fas fa-code me-1"></i>
+                    Développé avec Spring Boot 3, Thymeleaf & MySQL
+                    |
+                    <i class="fas fa-copyright me-1"></i>
+                    2025 Centre de Formation
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+</script>
+</body>
+</html>

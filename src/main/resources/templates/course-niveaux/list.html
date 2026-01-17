@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' - Centre de Formation'">Liste des Associations Cours-Niveaux</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 rounded">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-graduation-cap me-2"></i>Centre de Formation
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-home"></i> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/students">
+                        <i class="fas fa-users"></i> Étudiants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/niveaux">
+                        <i class="fas fa-layer-group"></i> Niveaux
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/courses">
+                        <i class="fas fa-book"></i> Cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/profs">
+                        <i class="fas fa-chalkboard-teacher"></i> Professeurs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/course-niveaux">
+                        <i class="fas fa-link"></i> Cours-Niveaux
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/student-niveaux">
+                        <i class="fas fa-user-graduate"></i> Affectations Étudiants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/prof-assignments">
+                        <i class="fas fa-tasks"></i> Affectations Professeurs
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 th:text="${pageTitle}">Gestion des Cours par Niveau</h2>
+        <a href="/course-niveaux/new" class="btn btn-success">
+            <i class="fas fa-plus"></i> Associer un cours à un niveau
+        </a>
+    </div>
+
+    <!-- Course-Niveaux Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-list me-2"></i>Liste des associations
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Cours</th>
+                        <th>Niveau</th>
+                        <th>Prix (€)</th>
+                        <th>Durée (heures)</th>
+                        <th>Description</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="courseNiveau, stat : ${courseNiveaux}">
+                        <td th:text="${stat.index + 1}">1</td>
+                        <td>
+                            <span class="badge bg-info">
+                                <i class="fas fa-book me-1"></i>
+                                <span th:text="${courseNiveau.course.nom}">Cours</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-warning">
+                                <i class="fas fa-layer-group me-1"></i>
+                                <span th:text="${courseNiveau.niveau.nom}">Niveau</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success">
+                                <i class="fas fa-euro-sign me-1"></i>
+                                <span th:text="${courseNiveau.prix}">0.00</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">
+                                <i class="fas fa-clock me-1"></i>
+                                <span th:text="${courseNiveau.duree}">0</span>h
+                            </span>
+                        </td>
+                        <td>
+                            <small class="text-muted" th:text="${courseNiveau.description}">Description</small>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a th:href="@{/prof-assignments/by-course-niveau/{id}(id=${courseNiveau.id})}"
+                                   class="btn btn-outline-info" title="Voir professeurs">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </a>
+                                <a th:href="@{/course-niveaux/edit/{id}(id=${courseNiveau.id})}"
+                                   class="btn btn-outline-warning" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a th:href="@{/course-niveaux/delete/{id}(id=${courseNiveau.id})}"
+                                   class="btn btn-outline-danger" title="Supprimer"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette association ?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(courseNiveaux)}">
+                        <td colspan="7" class="text-center py-5">
+                            <div class="text-muted">
+                                <i class="fas fa-link fa-3x mb-3"></i>
+                                <h5>Aucune association trouvée</h5>
+                                <p class="mb-3">
+                                    Aucun cours n'est associé à un niveau
+                                </p>
+                                <a href="/course-niveaux/new" class="btn btn-primary">
+                                    <i class="fas fa-plus me-1"></i>Créer la première association
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p class="text-muted mb-0">
+                    <i class="fas fa-code me-1"></i>
+                    Développé avec Spring Boot 3, Thymeleaf & MySQL
+                    |
+                    <i class="fas fa-copyright me-1"></i>
+                    2025 Centre de Formation
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

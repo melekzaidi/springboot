@@ -20,7 +20,6 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    // Display list of students
     @GetMapping
     public String listStudents(Model model,
                                @RequestParam(value = "keyword", required = false) String keyword) {
@@ -36,48 +35,42 @@ public class StudentController {
         model.addAttribute("students", students);
         model.addAttribute("totalStudents", studentService.countStudents());
         model.addAttribute("pageTitle", "Gestion des Étudiants");
-        return "students/list";  // Changed: return direct template
+        return "students/list";
     }
 
-    // Show form to create new student
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         Student student = new Student();
-        student.setDateInscription(LocalDate.now()); // Default to today
+        student.setDateInscription(LocalDate.now());
 
         model.addAttribute("student", student);
         model.addAttribute("pageTitle", "Ajouter un nouvel étudiant");
-        return "students/form";  // Changed: return direct template
+        return "students/form";
     }
 
-    // Handle form submission for new student
     @PostMapping("/save")
     public String saveStudent(@Valid @ModelAttribute Student student,
                               BindingResult result,
                               Model model,
                               RedirectAttributes redirectAttributes) {
 
-        // Check for validation errors
         if (result.hasErrors()) {
             model.addAttribute("pageTitle", "Ajouter un nouvel étudiant");
             return "students/form";
         }
 
-        // Check if matricule is unique
         if (!studentService.isMatriculeUnique(student.getMatricule())) {
             result.rejectValue("matricule", "error.student", "Ce matricule existe déjà!");
             model.addAttribute("pageTitle", "Ajouter un nouvel étudiant");
             return "students/form";
         }
 
-        // Check if email is unique
         if (!studentService.isEmailUnique(student.getEmail())) {
             result.rejectValue("email", "error.student", "Cet email existe déjà!");
             model.addAttribute("pageTitle", "Ajouter un nouvel étudiant");
             return "students/form";
         }
 
-        // Save student
         studentService.saveStudent(student);
 
         redirectAttributes.addFlashAttribute("successMessage",
@@ -86,22 +79,20 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // Show form to edit existing student
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model,
                                RedirectAttributes redirectAttributes) {
         try {
             Student student = studentService.getStudentById(id);
             model.addAttribute("student", student);
-            model.addAttribute("pageTitle", "Modifier l'étudiant: " + student   .getNom());
-            return "students/form";  // Changed: return direct template
+            model.addAttribute("pageTitle", "Modifier l'étudiant: " + student.getNom());
+            return "students/form";
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/students";
         }
     }
 
-    // Handle form submission for updating student
     @PostMapping("/update/{id}")
     public String updateStudent(@PathVariable Long id,
                                 @Valid @ModelAttribute Student student,
@@ -109,16 +100,13 @@ public class StudentController {
                                 Model model,
                                 RedirectAttributes redirectAttributes) {
 
-        // Check for validation errors
         if (result.hasErrors()) {
             model.addAttribute("pageTitle", "Modifier l'étudiant");
             return "students/form";
         }
 
-        // Get existing student
         Student existingStudent = studentService.getStudentById(id);
 
-        // Check if matricule is unique (excluding current student)
         if (!existingStudent.getMatricule().equals(student.getMatricule()) &&
                 !studentService.isMatriculeUnique(student.getMatricule())) {
             result.rejectValue("matricule", "error.student", "Ce matricule existe déjà!");
@@ -126,7 +114,6 @@ public class StudentController {
             return "students/form";
         }
 
-        // Check if email is unique (excluding current student)
         if (!existingStudent.getEmail().equals(student.getEmail()) &&
                 !studentService.isEmailUnique(student.getEmail())) {
             result.rejectValue("email", "error.student", "Cet email existe déjà!");
@@ -134,7 +121,6 @@ public class StudentController {
             return "students/form";
         }
 
-        // Update student
         studentService.updateStudent(id, student);
 
         redirectAttributes.addFlashAttribute("successMessage",
@@ -143,7 +129,6 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // Delete student
     @GetMapping("/delete/{id}")
     public String deleteStudent(@PathVariable Long id,
                                 RedirectAttributes redirectAttributes) {
@@ -159,7 +144,6 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // View student details
     @GetMapping("/view/{id}")
     public String viewStudent(@PathVariable Long id, Model model,
                               RedirectAttributes redirectAttributes) {
@@ -167,7 +151,7 @@ public class StudentController {
             Student student = studentService.getStudentById(id);
             model.addAttribute("student", student);
             model.addAttribute("pageTitle", "Détails de l'étudiant: " + student.getNom());
-            return "students/view";  // Changed: return direct template
+            return "students/view";
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/students";
