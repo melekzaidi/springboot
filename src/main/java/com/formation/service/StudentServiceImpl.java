@@ -16,27 +16,56 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private com.formation.repository.AppUserRepository appUserRepository;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     @Override
     public Student saveStudent(Student student) {
-        return studentRepository.save(student);
+        Student savedStudent = studentRepository.save(student);
+        
+        // Sync AppUser
+        com.formation.entity.AppUser appUser = new com.formation.entity.AppUser();
+        appUser.setEmail(savedStudent.getEmail());
+        appUser.setPassword(passwordEncoder.encode(savedStudent.getMatricule())); // Password = Matricule
+        appUser.setRole("STUDENT");
+        appUserRepository.save(appUser);
+        
+        return savedStudent;
     }
 
     @Override
     public Student updateStudent(Long id, Student studentDetails) {
         Student student = getStudentById(id);
-
+        
+        String oldEmail = student.getEmail();
+        
         student.setMatricule(studentDetails.getMatricule());
         student.setNom(studentDetails.getNom());
         student.setPrenom(studentDetails.getPrenom());
         student.setEmail(studentDetails.getEmail());
         student.setDateInscription(studentDetails.getDateInscription());
 
-        return studentRepository.save(student);
+        Student updatedStudent = studentRepository.save(student);
+
+        // Update AppUser if email changed
+        if (!oldEmail.equals(updatedStudent.getEmail())) {
+            appUserRepository.findByEmail(oldEmail).ifPresent(appUser -> {
+                appUser.setEmail(updatedStudent.getEmail());
+                appUserRepository.save(appUser);
+            });
+        }
+        
+        return updatedStudent;
     }
 
     @Override
     public void deleteStudent(Long id) {
         Student student = getStudentById(id);
+        // Delete AppUser
+        appUserRepository.findByEmail(student.getEmail()).ifPresent(appUserRepository::delete);
         studentRepository.delete(student);
     }
 

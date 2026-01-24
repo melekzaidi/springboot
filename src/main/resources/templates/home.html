@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -216,7 +216,7 @@
         </div>
 
         <!-- Statistics Section -->
-        <div id="statistics" class="mb-5">
+        <div id="statistics" class="mb-5" sec:authorize="hasRole('ADMIN')">
             <h2 class="mb-4 border-bottom pb-2">
                 <i class="fas fa-chart-pie me-2"></i>Tableau de Bord
             </h2>
@@ -310,294 +310,300 @@
         </div>
 
         <!-- Quick Links Section -->
-        <h2 class="mb-4 border-bottom pb-2">
-            <i class="fas fa-th-large me-2"></i>Modules de Gestion
-        </h2>
+        <div sec:authorize="hasRole('ADMIN')">
+            <h2 class="mb-4 border-bottom pb-2">
+                <i class="fas fa-th-large me-2"></i>Modules de Gestion
+            </h2>
 
-        <div class="row g-4">
-            <!-- Étudiants -->
-            <div class="col-md-4">
-                <div class="card module-card students">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary text-white rounded-circle p-3 me-3">
-                                <i class="fas fa-users fa-2x"></i>
+            <div class="row g-4">
+                <!-- Étudiants -->
+                <div class="col-md-4">
+                    <div class="card module-card students">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-users fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0">Gestion des Étudiants</h5>
+                                    <small class="text-muted">Inscriptions et suivi</small>
+                                </div>
                             </div>
-                            <div>
-                                <h5 class="card-title mb-0">Gestion des Étudiants</h5>
-                                <small class="text-muted">Inscriptions et suivi</small>
-                            </div>
-                        </div>
-                        <p class="card-text">
-                            Gérez les inscriptions, informations personnelles, et suivez la progression académique des
-                            étudiants.
-                        </p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i>Ajout/Modification d'étudiants</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Recherche et filtres</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Affectation aux niveaux</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="d-grid gap-2">
-                            <a href="/students" class="btn btn-primary">
-                                <i class="fas fa-users me-1"></i> Accéder aux étudiants
-                            </a>
-                            <a href="/students/new" class="btn btn-outline-primary">
-                                <i class="fas fa-plus me-1"></i> Ajouter un étudiant
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Professeurs -->
-            <div class="col-md-4">
-                <div class="card module-card profs">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-success text-white rounded-circle p-3 me-3">
-                                <i class="fas fa-chalkboard-teacher fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="card-title mb-0">Gestion des Professeurs</h5>
-                                <small class="text-muted">Employés et spécialités</small>
-                            </div>
-                        </div>
-                        <p class="card-text">
-                            Gérez les informations des professeurs, leurs spécialités et affectez-les aux cours.
-                        </p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i>Gestion des profils</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Suivi des spécialités</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Affectation aux cours</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="d-grid gap-2">
-                            <a href="/profs" class="btn btn-success">
-                                <i class="fas fa-chalkboard-teacher me-1"></i> Accéder aux professeurs
-                            </a>
-                            <a href="/profs/new" class="btn btn-outline-success">
-                                <i class="fas fa-plus me-1"></i> Ajouter un professeur
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cours -->
-            <div class="col-md-4">
-                <div class="card module-card courses">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-info text-white rounded-circle p-3 me-3">
-                                <i class="fas fa-book fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="card-title mb-0">Gestion des Cours</h5>
-                                <small class="text-muted">Programmes et contenus</small>
-                            </div>
-                        </div>
-                        <p class="card-text">
-                            Créez et gérez les cours disponibles, leurs descriptions et leur organisation pédagogique.
-                        </p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i>Création de cours</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Descriptions détaillées</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Association aux niveaux</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="d-grid gap-2">
-                            <a href="/courses" class="btn btn-info text-white">
-                                <i class="fas fa-book me-1"></i> Accéder aux cours
-                            </a>
-                            <a href="/courses/new" class="btn btn-outline-info">
-                                <i class="fas fa-plus me-1"></i> Ajouter un cours
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Niveaux -->
-            <div class="col-md-4">
-                <div class="card module-card niveaux">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-warning text-white rounded-circle p-3 me-3">
-                                <i class="fas fa-layer-group fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="card-title mb-0">Gestion des Niveaux</h5>
-                                <small class="text-muted">Structure pédagogique</small>
-                            </div>
-                        </div>
-                        <p class="card-text">
-                            Définissez les niveaux pédagogiques et organisez la progression des étudiants.
-                        </p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i>Création de niveaux</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Hiérarchie pédagogique</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Affectation des étudiants</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="d-grid gap-2">
-                            <a href="/niveaux" class="btn btn-warning">
-                                <i class="fas fa-layer-group me-1"></i> Accéder aux niveaux
-                            </a>
-                            <a href="/niveaux/new" class="btn btn-outline-warning">
-                                <i class="fas fa-plus me-1"></i> Ajouter un niveau
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Associations -->
-            <div class="col-md-4">
-                <div class="card module-card associations">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-purple text-white rounded-circle p-3 me-3"
-                                style="background-color: #6f42c1;">
-                                <i class="fas fa-link fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="card-title mb-0">Associations Cours-Niveaux</h5>
-                                <small class="text-muted">Tarifs et durées</small>
-                            </div>
-                        </div>
-                        <p class="card-text">
-                            Associez les cours aux niveaux avec des prix spécifiques, durées et descriptions.
-                        </p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i>Prix par niveau</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Durées spécifiques</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Descriptions dédiées</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="d-grid gap-2">
-                            <a href="/course-niveaux" class="btn text-white" style="background-color: #6f42c1;">
-                                <i class="fas fa-link me-1"></i> Accéder aux associations
-                            </a>
-                            <a href="/course-niveaux/new" class="btn btn-outline-purple"
-                                style="border-color: #6f42c1; color: #6f42c1;">
-                                <i class="fas fa-plus me-1"></i> Créer une association
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Affectations -->
-            <div class="col-md-4">
-                <div class="card module-card assignments">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-orange text-white rounded-circle p-3 me-3"
-                                style="background-color: #fd7e14;">
-                                <i class="fas fa-tasks fa-2x"></i>
-                            </div>
-                            <div>
-                                <h5 class="card-title mb-0">Affectations</h5>
-                                <small class="text-muted">Étudiants et professeurs</small>
-                            </div>
-                        </div>
-                        <p class="card-text">
-                            Affectez les étudiants aux niveaux et les professeurs aux cours-niveaux.
-                        </p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i>Affectation étudiants-niveaux</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Affectation professeurs-cours</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Suivi des dates</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="d-grid gap-2">
-                            <a href="/student-niveaux" class="btn text-white" style="background-color: #fd7e14;">
-                                <i class="fas fa-user-graduate me-1"></i> Affectations étudiants
-                            </a>
-                            <a href="/prof-assignments" class="btn text-white" style="background-color: #20c997;">
-                                <i class="fas fa-tasks me-1"></i> Affectations professeurs
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="row mt-5">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">
-                            <i class="fas fa-history me-2"></i>Actions Rapides
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            <a href="/students/new" class="list-group-item list-group-item-action">
-                                <i class="fas fa-user-plus text-primary me-2"></i>
-                                Inscrire un nouvel étudiant
-                            </a>
-                            <a href="/profs/new" class="list-group-item list-group-item-action">
-                                <i class="fas fa-user-tie text-success me-2"></i>
-                                Ajouter un nouveau professeur
-                            </a>
-                            <a href="/courses/new" class="list-group-item list-group-item-action">
-                                <i class="fas fa-book-medical text-info me-2"></i>
-                                Créer un nouveau cours
-                            </a>
-                            <a href="/course-niveaux/new" class="list-group-item list-group-item-action">
-                                <i class="fas fa-handshake text-purple me-2"></i>
-                                Associer un cours à un niveau
-                            </a>
-                            <a href="/student-niveaux/assign" class="list-group-item list-group-item-action">
-                                <i class="fas fa-user-check text-warning me-2"></i>
-                                Affecter un étudiant à un niveau
-                            </a>
-                            <a href="/prof-assignments/assign" class="list-group-item list-group-item-action">
-                                <i class="fas fa-calendar-check text-orange me-2"></i>
-                                Affecter un professeur à un cours
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">
-                            <i class="fas fa-info-circle me-2"></i>Informations Système
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-info">
-                            <h6><i class="fas fa-cogs me-2"></i>Configuration requise</h6>
-                            <ul class="mb-0">
-                                <li>Java 17 ou supérieur</li>
-                                <li>MySQL 8.0 ou supérieur</li>
-                                <li>Spring Boot 3.1.5</li>
-                                <li>Bootstrap 5.3.0</li>
+                            <p class="card-text">
+                                Gérez les inscriptions, informations personnelles, et suivez la progression académique
+                                des
+                                étudiants.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Ajout/Modification d'étudiants</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Recherche et filtres</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Affectation aux niveaux</li>
                             </ul>
                         </div>
-                        <div class="alert alert-light">
-                            <h6><i class="fas fa-question-circle me-2"></i>Support</h6>
-                            <p class="mb-0">
-                                Pour toute assistance technique, contactez l'équipe de support à
-                                <strong>support@centreformation.com</strong>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2">
+                                <a href="/students" class="btn btn-primary">
+                                    <i class="fas fa-users me-1"></i> Accéder aux étudiants
+                                </a>
+                                <a href="/students/new" class="btn btn-outline-primary">
+                                    <i class="fas fa-plus me-1"></i> Ajouter un étudiant
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professeurs -->
+                <div class="col-md-4">
+                    <div class="card module-card profs">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-success text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0">Gestion des Professeurs</h5>
+                                    <small class="text-muted">Employés et spécialités</small>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                Gérez les informations des professeurs, leurs spécialités et affectez-les aux cours.
                             </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Gestion des profils</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Suivi des spécialités</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Affectation aux cours</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2">
+                                <a href="/profs" class="btn btn-success">
+                                    <i class="fas fa-chalkboard-teacher me-1"></i> Accéder aux professeurs
+                                </a>
+                                <a href="/profs/new" class="btn btn-outline-success">
+                                    <i class="fas fa-plus me-1"></i> Ajouter un professeur
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cours -->
+                <div class="col-md-4">
+                    <div class="card module-card courses">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-info text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-book fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0">Gestion des Cours</h5>
+                                    <small class="text-muted">Programmes et contenus</small>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                Créez et gérez les cours disponibles, leurs descriptions et leur organisation
+                                pédagogique.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Création de cours</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Descriptions détaillées</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Association aux niveaux</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2">
+                                <a href="/courses" class="btn btn-info text-white">
+                                    <i class="fas fa-book me-1"></i> Accéder aux cours
+                                </a>
+                                <a href="/courses/new" class="btn btn-outline-info">
+                                    <i class="fas fa-plus me-1"></i> Ajouter un cours
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Niveaux -->
+                <div class="col-md-4">
+                    <div class="card module-card niveaux">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-warning text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-layer-group fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0">Gestion des Niveaux</h5>
+                                    <small class="text-muted">Structure pédagogique</small>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                Définissez les niveaux pédagogiques et organisez la progression des étudiants.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Création de niveaux</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Hiérarchie pédagogique</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Affectation des étudiants</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2">
+                                <a href="/niveaux" class="btn btn-warning">
+                                    <i class="fas fa-layer-group me-1"></i> Accéder aux niveaux
+                                </a>
+                                <a href="/niveaux/new" class="btn btn-outline-warning">
+                                    <i class="fas fa-plus me-1"></i> Ajouter un niveau
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Associations -->
+                <div class="col-md-4">
+                    <div class="card module-card associations">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-purple text-white rounded-circle p-3 me-3"
+                                    style="background-color: #6f42c1;">
+                                    <i class="fas fa-link fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0">Associations Cours-Niveaux</h5>
+                                    <small class="text-muted">Tarifs et durées</small>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                Associez les cours aux niveaux avec des prix spécifiques, durées et descriptions.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Prix par niveau</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Durées spécifiques</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Descriptions dédiées</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2">
+                                <a href="/course-niveaux" class="btn text-white" style="background-color: #6f42c1;">
+                                    <i class="fas fa-link me-1"></i> Accéder aux associations
+                                </a>
+                                <a href="/course-niveaux/new" class="btn btn-outline-purple"
+                                    style="border-color: #6f42c1; color: #6f42c1;">
+                                    <i class="fas fa-plus me-1"></i> Créer une association
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Affectations -->
+                <div class="col-md-4">
+                    <div class="card module-card assignments">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-orange text-white rounded-circle p-3 me-3"
+                                    style="background-color: #fd7e14;">
+                                    <i class="fas fa-tasks fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0">Affectations</h5>
+                                    <small class="text-muted">Étudiants et professeurs</small>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                Affectez les étudiants aux niveaux et les professeurs aux cours-niveaux.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Affectation étudiants-niveaux</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Affectation professeurs-cours</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Suivi des dates</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2">
+                                <a href="/student-niveaux" class="btn text-white" style="background-color: #fd7e14;">
+                                    <i class="fas fa-user-graduate me-1"></i> Affectations étudiants
+                                </a>
+                                <a href="/prof-assignments" class="btn text-white" style="background-color: #20c997;">
+                                    <i class="fas fa-tasks me-1"></i> Affectations professeurs
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Actions Rapides
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a href="/students/new" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-plus text-primary me-2"></i>
+                            Inscrire un nouvel étudiant
+                        </a>
+                        <a href="/profs/new" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-tie text-success me-2"></i>
+                            Ajouter un nouveau professeur
+                        </a>
+                        <a href="/courses/new" class="list-group-item list-group-item-action">
+                            <i class="fas fa-book-medical text-info me-2"></i>
+                            Créer un nouveau cours
+                        </a>
+                        <a href="/course-niveaux/new" class="list-group-item list-group-item-action">
+                            <i class="fas fa-handshake text-purple me-2"></i>
+                            Associer un cours à un niveau
+                        </a>
+                        <a href="/student-niveaux/assign" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-check text-warning me-2"></i>
+                            Affecter un étudiant à un niveau
+                        </a>
+                        <a href="/prof-assignments/assign" class="list-group-item list-group-item-action">
+                            <i class="fas fa-calendar-check text-orange me-2"></i>
+                            Affecter un professeur à un cours
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Informations Système
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-cogs me-2"></i>Configuration requise</h6>
+                        <ul class="mb-0">
+                            <li>Java 17 ou supérieur</li>
+                            <li>MySQL 8.0 ou supérieur</li>
+                            <li>Spring Boot 3.1.5</li>
+                            <li>Bootstrap 5.3.0</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-light">
+                        <h6><i class="fas fa-question-circle me-2"></i>Support</h6>
+                        <p class="mb-0">
+                            Pour toute assistance technique, contactez l'équipe de support à
+                            <strong>support@centreformation.com</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 
     <!-- Footer -->
@@ -607,7 +613,8 @@
                 <div class="col-md-6">
                     <h6>Centre de Formation</h6>
                     <p class="text-muted mb-2">
-                        Système de gestion académique complet pour centres de formation professionnelle et éducative.
+                        Système de gestion académique complet pour centres de formation professionnelle et
+                        éducative.
                     </p>
                     <p class="text-muted">
                         <i class="fas fa-map-marker-alt me-1"></i>

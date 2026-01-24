@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <title>Détails de la séance - Gestion des Cours</title>
@@ -33,9 +33,12 @@
                 <div class="d-flex align-items-center">
                     <span class="navbar-text text-white me-3">
                         <i class="bi bi-person-circle"></i>
-                        <span th:text="${session.user.prenom + ' ' + session.user.nom}">Utilisateur</span>
+                        <span th:if="${currentUser != null}"
+                            th:text="${currentUser.prenom + ' ' + currentUser.nom}">Utilisateur</span>
+                        <span class="badge bg-light text-primary"
+                            sec:authentication="principal.authorities[0]">Rôle</span>
                     </span>
-                    <a href="/logout" class="btn btn-outline-light btn-sm">Déconnexion</a>
+                    <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Déconnexion</a>
                 </div>
             </div>
         </div>
@@ -76,14 +79,14 @@
         </div>
 
         <!-- Section Étudiant (Read-only) -->
-        <div th:if="${userRole == 'student'}">
+        <div sec:authorize="hasRole('STUDENT')">
             <div class="alert alert-info">
                 <i class="bi bi-info-circle"></i> Vous consultez les détails de cette séance en lecture seule.
             </div>
         </div>
 
         <!-- Section Professeur (Gestion des absences) -->
-        <div th:if="${userRole == 'prof'}">
+        <div sec:authorize="hasRole('PROF')">
             <div class="card">
                 <div class="card-header bg-light">
                     <h4 class="mb-0">Gestion des présences</h4>

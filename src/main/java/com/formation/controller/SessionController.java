@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -55,9 +56,29 @@ public class SessionController {
     }
 
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(Model model, org.springframework.security.core.Authentication authentication) {
         model.addAttribute("courseSession", new Session());
-        model.addAttribute("assignments", profCourseNiveauService.getAllProfCourseNiveaux());
+        
+        List<ProfCourseNiveau> assignments;
+        String role = authentication.getAuthorities().stream().findFirst().get().getAuthority();
+        
+        if ("ROLE_PROF".equals(role)) {
+             String email = authentication.getName();
+             // We need a method to get assignments for a specfic Prof email or ID
+             // profCourseNiveauService.getAssignmentsByProfEmail(email);
+             // Since I can't easily change Service right now without reading it, I'll iterate or assuming I added such method?
+             // Or find prof by email then filter.
+             // Let's rely on repository directly or service if possible.
+             // I'll fetch all and filter in memory for now to be safe, or add method if I can.
+             // Better: find prof then filter.
+             assignments = profCourseNiveauService.getAllProfCourseNiveaux().stream()
+                 .filter(pcn -> pcn.getProf().getEmail().equals(email))
+                 .collect(java.util.stream.Collectors.toList());
+        } else {
+             assignments = profCourseNiveauService.getAllProfCourseNiveaux();
+        }
+        
+        model.addAttribute("assignments", assignments);
         model.addAttribute("pageTitle", "Ajouter une nouvelle séance");
         return "sessions/form";
     }

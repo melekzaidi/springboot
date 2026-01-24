@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -62,7 +62,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 rounded">
         <div class="container">
-            <a class="navbar-brand" th:href="@{/static}">
+            <a class="navbar-brand" th:href="@{/}">
                 <i class="fas fa-graduation-cap me-2"></i>Centre de Formation
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -70,29 +70,41 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
+                    <!-- Home accessible to all authenticated -->
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/static}">
+                        <a class="nav-link" th:href="@{/}">
                             <i class="fas fa-home"></i> Accueil
                         </a>
                     </li>
-                    <li class="nav-item">
+
+                    <!-- Admin Only Links -->
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                         <a class="nav-link" th:href="@{/students}">
                             <i class="fas fa-users"></i> Étudiants
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#">
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" th:href="@{/profs}">
                             <i class="fas fa-chalkboard-teacher"></i> Formateurs
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/sessions}">
-                            <i class="fas fa-calendar-alt"></i> Séances
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" href="#" th:href="@{/courses}">
+                            <i class="fas fa-book"></i> Cours
                         </a>
                     </li>
+
+                    <!-- Calendar for Everyone -->
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#">
-                            <i class="fas fa-book"></i> Cours
+                        <a class="nav-link" th:href="@{/calendar}">
+                            <i class="fas fa-calendar-day"></i> Mon Calendrier
+                        </a>
+                    </li>
+
+                    <!-- Sessions Management -->
+                    <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'PROF')">
+                        <a class="nav-link" th:href="@{/sessions}">
+                            <i class="fas fa-calendar-alt"></i> Séances
                         </a>
                     </li>
                 </ul>

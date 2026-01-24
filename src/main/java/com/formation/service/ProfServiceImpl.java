@@ -15,26 +15,57 @@ public class ProfServiceImpl implements ProfService {
     @Autowired
     private ProfRepository profRepository;
 
+    @Autowired
+    private com.formation.repository.AppUserRepository appUserRepository;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     @Override
     public Prof saveProf(Prof prof) {
-        return profRepository.save(prof);
+        Prof savedProf = profRepository.save(prof);
+        
+        // Sync AppUser
+        com.formation.entity.AppUser appUser = new com.formation.entity.AppUser();
+        appUser.setEmail(savedProf.getEmail());
+        appUser.setPassword(passwordEncoder.encode(savedProf.getMatricule())); // Password = Matricule
+        appUser.setRole("PROF");
+        appUserRepository.save(appUser);
+        
+        return savedProf;
     }
 
     @Override
     public Prof updateProf(Long id, Prof profDetails) {
         Prof prof = getProfById(id);
+        
+        String oldEmail = prof.getEmail();
+        
         prof.setMatricule(profDetails.getMatricule());
         prof.setNom(profDetails.getNom());
         prof.setPrenom(profDetails.getPrenom());
         prof.setEmail(profDetails.getEmail());
         prof.setSpecialite(profDetails.getSpecialite());
         prof.setTelephone(profDetails.getTelephone());
-        return profRepository.save(prof);
+        
+        Prof updatedProf = profRepository.save(prof);
+        
+        // Update AppUser if email changed
+        if (!oldEmail.equals(updatedProf.getEmail())) {
+            appUserRepository.findByEmail(oldEmail).ifPresent(appUser -> {
+                appUser.setEmail(updatedProf.getEmail());
+                appUserRepository.save(appUser);
+            });
+        }
+        
+        return updatedProf;
     }
 
     @Override
     public void deleteProf(Long id) {
         Prof prof = getProfById(id);
+        // Delete AppUser
+        appUserRepository.findByEmail(prof.getEmail()).ifPresent(appUserRepository::delete);
         profRepository.delete(prof);
     }
 
