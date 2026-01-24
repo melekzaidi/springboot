@@ -15,4 +15,5 @@ public interface StudentNiveauRepository extends JpaRepository<StudentNiveau, Lo
     List<StudentNiveau> findByStudent(Student student);
     List<StudentNiveau> findByNiveau(Niveau niveau);
     boolean existsByStudentAndNiveau(Student student, Niveau niveau);
+    List<StudentNiveau> findByNiveauId(Long niveauId);
 }

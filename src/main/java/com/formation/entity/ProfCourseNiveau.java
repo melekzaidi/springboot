@@ -81,6 +81,9 @@ public class ProfCourseNiveau {
 
     @Override
     public String toString() {
+        if (prof == null || courseNiveau == null) {
+            return "Assignment #" + id;
+        }
         return prof.getNomComplet() + " - " + courseNiveau.toString();
     }
 }
