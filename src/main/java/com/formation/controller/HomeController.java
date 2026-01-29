@@ -1,5 +1,6 @@
 package com.formation.controller;
 
+import com.formation.dto.CourseNiveauStatsDTO;
 import com.formation.entity.Prof;
 import com.formation.entity.Student;
 import com.formation.service.*;
@@ -33,6 +34,9 @@ public class HomeController {
     @Autowired
     private GradeService gradeService;
 
+    @Autowired
+    private DashboardService dashboardService;
+
     @GetMapping("/")
     public String home(Authentication authentication) {
         // Redirect users based on their role after login
@@ -62,6 +66,30 @@ public class HomeController {
                 model.addAttribute("totalCourseNiveaux", courseNiveauService.getAllCourseNiveaux().size());
                 model.addAttribute("totalAssignments", profCourseNiveauService.getAllProfCourseNiveaux().size());
                 model.addAttribute("totalGrades", gradeService.getAllGrades().size());
+                
+                // Add course-niveau statistics for BI chart
+                try {
+                    CourseNiveauStatsDTO courseNiveauStats = dashboardService.getCourseNiveauStats();
+                    System.out.println("DEBUG - Course Niveau Stats: " + courseNiveauStats.getTotalStudentEnrollments() + " enrollments, " + courseNiveauStats.getTotalCourseNiveaux() + " niveaux");
+                    if (courseNiveauStats.getDistributions() != null) {
+                        System.out.println("DEBUG - Distributions count: " + courseNiveauStats.getDistributions().size());
+                        courseNiveauStats.getDistributions().forEach(dist -> 
+                            System.out.println("DEBUG - " + dist.getNiveauName() + ": " + dist.getStudentCount() + " students")
+                        );
+                    }
+                    model.addAttribute("courseNiveauStats", courseNiveauStats);
+                } catch (Exception e) {
+                    System.err.println("ERROR in dashboard service: " + e.getMessage());
+                    e.printStackTrace();
+                    // Fallback to default values if service fails
+                    CourseNiveauStatsDTO defaultStats = new CourseNiveauStatsDTO();
+                    defaultStats.setTotalCourseNiveaux(0L);
+                    defaultStats.setTotalStudentEnrollments(0L);
+                    defaultStats.setDistributions(new java.util.ArrayList<>());
+                    defaultStats.setMostPopularCourseNiveau("Aucun");
+                    defaultStats.setLeastPopularCourseNiveau("Aucun");
+                    model.addAttribute("courseNiveauStats", defaultStats);
+                }
                 
             } else if ("ROLE_PROF".equals(userRole)) {
                 // Professor dashboard

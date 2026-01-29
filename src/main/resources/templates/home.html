@@ -109,6 +109,28 @@
         .module-card.associations {
             border-left-color: #fd7e14;
         }
+
+        .chart-legend .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .bg-orange {
+            background-color: #fd7e14 !important;
+        }
+
+        #niveauChart {
+            max-height: 300px;
+        }
     </style>
 </head>
 
@@ -239,6 +261,43 @@
             <h2 class="mb-4 border-bottom pb-2">
                 <i class="fas fa-chart-pie me-2"></i>Tableau de Bord
             </h2>
+
+            <!-- BI Analytics Chart Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>Analyse des Inscriptions - Distribution des Niveaux par Étudiant
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <canvas id="niveauChart" width="400" height="200"></canvas>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="chart-legend">
+                                        <h6 class="mb-3">Distribution par Niveau</h6>
+                                        <div id="niveauLegend">
+                                            <!-- Legend items will be populated by JavaScript -->
+                                        </div>
+                                        <hr>
+                                        <div class="text-center">
+                                            <h6>Total Inscriptions</h6>
+                                            <h3 class="text-primary" id="totalEnrollments" th:text="${courseNiveauStats?.totalStudentEnrollments ?: 0}">0</h3>
+                                        </div>
+                                        <div class="text-center mt-3">
+                                            <h6>Niveaux Disponibles</h6>
+                                            <h4 class="text-info" id="totalNiveaux" th:text="${courseNiveauStats?.totalCourseNiveaux ?: 0}">0</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Statistics Cards -->
             <div class="dashboard-grid">
@@ -668,6 +727,19 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Inject server data into JavaScript -->
+    <script th:if="${courseNiveauStats}" th:inline="javascript">
+        window.courseNiveauData = {
+            distributions: /*[[${courseNiveauStats.distributions}]]*/ [],
+            totalStudentEnrollments: /*[[${courseNiveauStats.totalStudentEnrollments}]]*/ 0,
+            totalCourseNiveaux: /*[[${courseNiveauStats.totalCourseNiveaux}]]*/ 0,
+            mostPopular: /*[[${courseNiveauStats.mostPopularCourseNiveau}]]*/ 'Aucun',
+            leastPopular: /*[[${courseNiveauStats.leastPopularCourseNiveau}]]*/ 'Aucun'
+        };
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -694,7 +766,108 @@
             if (yearElement.textContent.includes('2025')) {
                 yearElement.innerHTML = yearElement.innerHTML.replace('2025', currentYear);
             }
+
+            // Initialize BI Chart
+            initializeNiveauChart();
         });
+
+        function initializeNiveauChart() {
+            // Use injected server data
+            const courseNiveauStats = window.courseNiveauData || {
+                distributions: [],
+                totalStudentEnrollments: 0,
+                totalCourseNiveaux: 0
+            };
+            
+            console.log('Course Niveau Data:', courseNiveauStats); // Debug log
+            
+            if (courseNiveauStats.distributions && courseNiveauStats.distributions.length > 0) {
+                createNiveauChart(courseNiveauStats);
+                updateNiveauLegend(courseNiveauStats);
+            } else {
+                // Show message when no real data available
+                const chartContainer = document.getElementById('niveauChart').parentElement;
+                chartContainer.innerHTML = '<div class="text-center text-muted"><i class="fas fa-chart-pie fa-3x mb-3"></i><p>Aucune donnée d\'inscription disponible</p><small>Ajoutez des étudiants aux niveaux pour voir les statistiques</small></div>';
+                
+                // Update legend to show no data message
+                const legendContainer = document.getElementById('niveauLegend');
+                legendContainer.innerHTML = '<p class="text-muted"><i class="fas fa-info-circle me-2"></i>Aucune inscription trouvée</p>';
+            }
+            
+            // Always update the totals with real data
+            document.getElementById('totalEnrollments').textContent = courseNiveauStats.totalStudentEnrollments || 0;
+            document.getElementById('totalNiveaux').textContent = courseNiveauStats.totalCourseNiveaux || 0;
+        }
+
+        function createNiveauChart(data) {
+            const ctx = document.getElementById('niveauChart').getContext('2d');
+            
+            const labels = data.distributions.map(d => d.niveauName);
+            const counts = data.distributions.map(d => d.studentCount);
+            const colors = [
+                '#007bff', // Primary blue
+                '#28a745', // Success green
+                '#ffc107', // Warning yellow
+                '#dc3545', // Danger red
+                '#6f42c1', // Purple
+                '#fd7e14', // Orange
+                '#17a2b8', // Info cyan
+                '#6c757d'  // Secondary gray
+            ];
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // We'll use custom legend
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed * 100) / total).toFixed(1);
+                                    return context.label + ': ' + context.parsed + ' étudiants (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+
+        function updateNiveauLegend(data) {
+            const legendContainer = document.getElementById('niveauLegend');
+            const colors = [
+                '#007bff', '#28a745', '#ffc107', '#dc3545', 
+                '#6f42c1', '#fd7e14', '#17a2b8', '#6c757d'
+            ];
+            
+            let legendHTML = '';
+            data.distributions.forEach((distribution, index) => {
+                const color = colors[index % colors.length];
+                legendHTML += `
+                    <div class="legend-item mb-2">
+                        <span class="legend-color" style="background-color: ${color}"></span>
+                        <span>${distribution.niveauName}: <strong>${distribution.studentCount}</strong> étudiants</span>
+                    </div>
+                `;
+            });
+            
+            legendContainer.innerHTML = legendHTML;
+        }
     </script>
 </body>
 

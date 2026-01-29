@@ -38,4 +38,26 @@ public interface GradeRepository extends JpaRepository<Grade, Long> {
     
     boolean existsByStudentAndProfCourseNiveauAndGradeType(
         Student student, ProfCourseNiveau profCourseNiveau, Grade.GradeType gradeType);
+    
+    // BI Dashboard queries
+    @Query("SELECT AVG(g.note) FROM Grade g")
+    Double getAverageGrade();
+    
+    @Query("SELECT COUNT(g) FROM Grade g WHERE g.note >= 16")
+    Long countExcellentGrades();
+    
+    @Query("SELECT COUNT(g) FROM Grade g WHERE g.note >= 14 AND g.note < 16")
+    Long countGoodGrades();
+    
+    @Query("SELECT COUNT(g) FROM Grade g WHERE g.note >= 12 AND g.note < 14")
+    Long countAverageGrades();
+    
+    @Query("SELECT COUNT(g) FROM Grade g WHERE g.note >= 10 AND g.note < 12")
+    Long countPoorGrades();
+    
+    @Query("SELECT COUNT(g) FROM Grade g WHERE g.note < 10")
+    Long countFailingGrades();
+    
+    @Query("SELECT CASE WHEN COUNT(g) = 0 THEN 0.0 ELSE (COUNT(CASE WHEN g.note >= 10 THEN 1 END) * 100.0 / COUNT(g)) END FROM Grade g")
+    Double getSuccessRate();
 }

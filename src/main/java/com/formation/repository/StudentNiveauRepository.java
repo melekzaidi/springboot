@@ -4,6 +4,7 @@ import com.formation.entity.Niveau;
 import com.formation.entity.Student;
 import com.formation.entity.StudentNiveau;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +17,14 @@ public interface StudentNiveauRepository extends JpaRepository<StudentNiveau, Lo
     List<StudentNiveau> findByNiveau(Niveau niveau);
     boolean existsByStudentAndNiveau(Student student, Niveau niveau);
     List<StudentNiveau> findByNiveauId(Long niveauId);
+    
+    // BI Dashboard queries for Course-Niveau distribution
+    @Query("SELECT n.nom, COUNT(sn) " +
+           "FROM StudentNiveau sn JOIN sn.niveau n " +
+           "GROUP BY n.id, n.nom " +
+           "ORDER BY COUNT(sn) DESC")
+    List<Object[]> getNiveauStudentDistribution();
+    
+    @Query("SELECT COUNT(DISTINCT sn.student) FROM StudentNiveau sn")
+    Long countTotalEnrolledStudents();
 }
