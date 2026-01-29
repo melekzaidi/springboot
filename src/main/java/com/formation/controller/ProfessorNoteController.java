@@ -34,14 +34,14 @@ public class ProfessorNoteController {
     public String listNotes(Model model, Authentication authentication) {
         String professorEmail = authentication.getName();
         List<ProfessorNoteDTO> notes = professorNoteService.getNotesByProfessor(professorEmail);
-        model.addAttribute("pageTitle", "Mes Notes sur les Étudiants");
+        model.addAttribute("pageTitle", "Mes Remarques sur les Étudiants");
         model.addAttribute("notes", notes);
         return "professor-notes/list";
     }
 
     @GetMapping("/form")
     public String showForm(Model model, Authentication authentication) {
-        model.addAttribute("pageTitle", "Ajouter une Note");
+        model.addAttribute("pageTitle", "Ajouter une Remarque");
         model.addAttribute("noteDTO", new ProfessorNoteDTO());
         
         // Get professor ID for the form
@@ -63,7 +63,7 @@ public class ProfessorNoteController {
         String professorEmail = authentication.getName();
         try {
             ProfessorNoteDTO note = professorNoteService.getNoteById(id, professorEmail);
-            model.addAttribute("pageTitle", "Modifier la Note");
+            model.addAttribute("pageTitle", "Modifier la Remarque");
             model.addAttribute("noteDTO", note);
             
             // Get professor ID for the form
@@ -78,7 +78,7 @@ public class ProfessorNoteController {
             
             return "professor-notes/form";
         } catch (Exception e) {
-            return "redirect:/professor-notes?error=Note non trouvée";
+            return "redirect:/professor-notes?error=Remarque non trouvée";
         }
     }
 
@@ -109,11 +109,11 @@ public class ProfessorNoteController {
                 // Update existing note
                 String professorEmail = authentication.getName();
                 professorNoteService.updateNote(noteDTO.getId(), noteDTO, professorEmail);
-                redirectAttributes.addFlashAttribute("success", "Note mise à jour avec succès");
+                redirectAttributes.addFlashAttribute("success", "Remarque mise à jour avec succès");
             } else {
                 // Create new note
                 professorNoteService.createNote(noteDTO);
-                redirectAttributes.addFlashAttribute("success", "Note créée avec succès");
+                redirectAttributes.addFlashAttribute("success", "Remarque créée avec succès");
             }
             return "redirect:/professor-notes";
         } catch (Exception e) {
@@ -129,7 +129,7 @@ public class ProfessorNoteController {
         try {
             String professorEmail = authentication.getName();
             professorNoteService.deleteNote(id, professorEmail);
-            redirectAttributes.addFlashAttribute("success", "Note supprimée avec succès");
+            redirectAttributes.addFlashAttribute("success", "Remarque supprimée avec succès");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression: " + e.getMessage());
         }

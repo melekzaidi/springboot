@@ -7,6 +7,7 @@ import sessionsSlice from './slices/sessionsSlice';
 import niveauxSlice from './slices/niveauxSlice';
 import gradesSlice from './slices/gradesSlice';
 import professorNotesSlice from './slices/professorNotesSlice';
+import integratedNotesSlice from './slices/integratedNotesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     niveaux: niveauxSlice,
     grades: gradesSlice,
     professorNotes: professorNotesSlice,
+    integratedNotes: integratedNotesSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

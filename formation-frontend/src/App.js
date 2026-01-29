@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, CircularProgress } from '@mui/material';
 import { checkAuth } from './store/slices/authSlice';
@@ -20,12 +20,12 @@ import MyGradesSummary from './pages/Grades/MyGradesSummary';
 import MyStudentGrades from './pages/Grades/MyStudentGrades';
 import ProfessorNotes from './pages/ProfessorNotes/ProfessorNotes';
 import StudentNotes from './pages/StudentNotes/StudentNotes';
+import IntegratedNotes from './pages/IntegratedNotes/IntegratedNotes';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import AuthDebug from './components/AuthDebug/AuthDebug';
 
 function App() {
   const dispatch = useDispatch();
-  const location = useLocation();
   const { isAuthenticated, loading, initialized, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -164,6 +164,16 @@ function App() {
                     element={
                       <ProtectedRoute requiredRoles={["ADMIN", "PROF"]}>
                         <GradesSummary />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  
+                  {/* Integrated Notes and Remarques */}
+                  <Route 
+                    path="/integrated-notes" 
+                    element={
+                      <ProtectedRoute requiredRoles={["PROF", "STUDENT"]}>
+                        <IntegratedNotes />
                       </ProtectedRoute>
                     } 
                   />

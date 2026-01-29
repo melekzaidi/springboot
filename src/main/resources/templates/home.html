@@ -156,12 +156,12 @@
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('PROF')">
                         <a class="nav-link" href="/professor-notes">
-                            <i class="fas fa-sticky-note"></i> Notes Étudiants
+                            <i class="fas fa-sticky-note"></i> Remarques Étudiants
                         </a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('STUDENT')">
-                        <a class="nav-link" href="/student-notes">
-                            <i class="fas fa-graduation-cap"></i> My Notes
+                        <a class="nav-link" href="/student-grades">
+                            <i class="fas fa-chart-line"></i> Mes Notes
                         </a>
                     </li>
                     <li class="nav-item">
@@ -571,11 +571,11 @@
                         </a>
                         <a sec:authorize="hasRole('PROF')" href="/professor-notes" class="list-group-item list-group-item-action">
                             <i class="fas fa-sticky-note text-warning me-2"></i>
-                            Gérer les notes étudiants
+                            Gérer les remarques étudiants
                         </a>
-                        <a sec:authorize="hasRole('STUDENT')" href="/student-notes" class="list-group-item list-group-item-action">
-                            <i class="fas fa-graduation-cap text-info me-2"></i>
-                            My Notes
+                        <a sec:authorize="hasRole('STUDENT')" href="/student-grades" class="list-group-item list-group-item-action">
+                            <i class="fas fa-chart-line text-info me-2"></i>
+                            Mes Notes
                         </a>
                         <a href="/course-niveaux/new" class="list-group-item list-group-item-action">
                             <i class="fas fa-handshake text-purple me-2"></i>

@@ -69,9 +69,10 @@ const Layout = ({ children }) => {
     { text: 'Niveaux', icon: <BookIcon />, path: '/niveaux', roles: ['ADMIN'] },
     { text: 'Séances', icon: <EventIcon />, path: '/sessions', roles: ['ADMIN', 'PROF'] },
     { text: 'Notes', icon: <GradeIcon />, path: '/grades', roles: ['ADMIN', 'PROF'] },
+    { text: 'Notes & Remarques', icon: <NoteIcon />, path: '/integrated-notes', roles: ['PROF', 'STUDENT'] },
     { text: 'Mes Notes', icon: <GradeIcon />, path: '/my-grades', roles: ['STUDENT'] },
-    { text: 'Notes Étudiants', icon: <NoteIcon />, path: '/professor-notes', roles: ['PROF'] },
-    { text: 'My Notes', icon: <NoteIcon />, path: '/student-notes', roles: ['STUDENT'] },
+    { text: 'Remarques Étudiants', icon: <NoteIcon />, path: '/professor-notes', roles: ['PROF'] },
+    { text: 'Mes Remarques', icon: <NoteIcon />, path: '/student-notes', roles: ['STUDENT'] },
   ];
 
   const filteredMenuItems = menuItems.filter(item => 

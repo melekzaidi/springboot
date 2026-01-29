@@ -87,14 +87,6 @@ const StudentNotes = () => {
     });
   };
 
-  const getInitials = (name) => {
-    return name
-      .split(' ')
-      .map(word => word.charAt(0))
-      .join('')
-      .toUpperCase();
-  };
-
   if (loading && studentNotes.length === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -108,7 +100,7 @@ const StudentNotes = () => {
       <Box display="flex" alignItems="center" mb={3}>
         <SchoolIcon sx={{ mr: 2, fontSize: 32, color: 'primary.main' }} />
         <Typography variant="h4" component="h1">
-          My Notes
+          Mes Remarques
         </Typography>
       </Box>
 
@@ -154,21 +146,21 @@ const StudentNotes = () => {
             <Tab 
               label={
                 <Badge badgeContent={studentNotes.length} color="primary">
-                  Toutes les notes
+                  Toutes les remarques
                 </Badge>
               } 
             />
             <Tab 
               label={
                 <Badge badgeContent={studentNotes.filter(n => n.courseName && n.niveauName).length} color="info">
-                  Notes de cours
+                  Remarques de cours
                 </Badge>
               } 
             />
             <Tab 
               label={
                 <Badge badgeContent={studentNotes.filter(n => !n.courseName || !n.niveauName).length} color="secondary">
-                  Notes générales
+                  Remarques générales
                 </Badge>
               } 
             />
@@ -180,20 +172,20 @@ const StudentNotes = () => {
         <Paper sx={{ p: 4, textAlign: 'center' }}>
           <SchoolIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
           <Typography variant="h6" color="textSecondary" gutterBottom>
-            Aucune note trouvée
+            Aucune remarque trouvée
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            {tabValue === 0 ? 'Vos professeurs n\'ont pas encore ajouté de notes vous concernant.' : 
-             tabValue === 1 ? 'Aucune note spécifique à un cours.' :
-             'Aucune note générale.'}
+            {tabValue === 0 ? 'Vos professeurs n\'ont pas encore ajouté de remarques vous concernant.' : 
+             tabValue === 1 ? 'Aucune remarque spécifique à un cours.' :
+             'Aucune remarque générale.'}
           </Typography>
         </Paper>
       ) : (
         <Box>
           <Typography variant="body1" color="textSecondary" sx={{ mb: 3 }}>
-            {tabValue === 0 ? 'Voici les notes que vos professeurs ont ajoutées à votre sujet.' :
-             tabValue === 1 ? 'Notes spécifiques à vos cours.' :
-             'Notes générales de vos professeurs.'}
+            {tabValue === 0 ? 'Voici les remarques que vos professeurs ont ajoutées à votre sujet.' :
+             tabValue === 1 ? 'Remarques spécifiques à vos cours.' :
+             'Remarques générales de vos professeurs.'}
           </Typography>
           
           {filteredNotes.map((note) => (
@@ -217,7 +209,7 @@ const StudentNotes = () => {
                         </Typography>
                       </Box>
                       <Chip
-                        label="Note"
+                        label="Remarque"
                         color="primary"
                         size="small"
                         variant="outlined"

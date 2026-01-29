@@ -10,11 +10,6 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
   Chip,
   Alert,
   CircularProgress,
@@ -32,6 +27,7 @@ import {
   Tabs,
   Tab,
   Badge,
+  IconButton,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -170,7 +166,7 @@ const ProfessorNotes = () => {
   };
 
   const handleDelete = async (noteId) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette note ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette remarque ?')) {
       try {
         await dispatch(deleteNote(noteId)).unwrap();
       } catch (error) {
@@ -201,7 +197,7 @@ const ProfessorNotes = () => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" component="h1">
-          Mes Notes sur les Étudiants
+          Mes Remarques sur les Étudiants
         </Typography>
         <Button
           variant="contained"
@@ -209,7 +205,7 @@ const ProfessorNotes = () => {
           startIcon={<AddIcon />}
           onClick={() => handleOpen()}
         >
-          Ajouter une Note
+          Ajouter une Remarque
         </Button>
       </Box>
 
@@ -269,21 +265,21 @@ const ProfessorNotes = () => {
           <Tab 
             label={
               <Badge badgeContent={notes.length} color="primary">
-                Toutes les notes
+                Toutes les remarques
               </Badge>
             } 
           />
           <Tab 
             label={
               <Badge badgeContent={notes.filter(n => n.isVisibleToStudent).length} color="success">
-                Notes visibles
+                Remarques visibles
               </Badge>
             } 
           />
           <Tab 
             label={
               <Badge badgeContent={notes.filter(n => !n.isVisibleToStudent).length} color="secondary">
-                Notes masquées
+                Remarques masquées
               </Badge>
             } 
           />
@@ -293,12 +289,12 @@ const ProfessorNotes = () => {
       {filteredNotes.length === 0 ? (
         <Paper sx={{ p: 3, textAlign: 'center' }}>
           <Typography variant="h6" color="textSecondary">
-            Aucune note trouvée
+            Aucune remarque trouvée
           </Typography>
           <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-            {tabValue === 0 ? 'Commencez par ajouter une note sur un étudiant' : 
-             tabValue === 1 ? 'Aucune note visible par les étudiants' :
-             'Aucune note masquée'}
+            {tabValue === 0 ? 'Commencez par ajouter une remarque sur un étudiant' : 
+             tabValue === 1 ? 'Aucune remarque visible par les étudiants' :
+             'Aucune remarque masquée'}
           </Typography>
         </Paper>
       ) : (
@@ -320,7 +316,7 @@ const ProfessorNotes = () => {
                             {note.courseName} - {note.niveauName}
                           </>
                         ) : (
-                          'Note générale'
+                          'Remarque générale'
                         )}
                       </Typography>
                     </Box>
@@ -374,7 +370,7 @@ const ProfessorNotes = () => {
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <form onSubmit={handleSubmit}>
           <DialogTitle>
-            {editingNote ? 'Modifier la Note' : 'Ajouter une Note'}
+            {editingNote ? 'Modifier la Remarque' : 'Ajouter une Remarque'}
           </DialogTitle>
           <DialogContent>
             <Box sx={{ pt: 1 }}>
@@ -401,7 +397,7 @@ const ProfessorNotes = () => {
 
               <TextField
                 fullWidth
-                label="Contenu de la note"
+                label="Contenu de la remarque"
                 name="noteContent"
                 value={formData.noteContent}
                 onChange={handleChange}
@@ -409,7 +405,7 @@ const ProfessorNotes = () => {
                 multiline
                 rows={6}
                 margin="normal"
-                placeholder="Saisissez votre note sur cet étudiant..."
+                placeholder="Saisissez votre remarque sur cet étudiant..."
                 helperText={`${formData.noteContent.length}/2000 caractères`}
               />
 
@@ -425,7 +421,7 @@ const ProfessorNotes = () => {
                   native: true,
                 }}
               >
-                <option value="">Note générale (aucun cours spécifique)</option>
+                <option value="">Remarque générale (aucun cours spécifique)</option>
                 {myProfCourseNiveaux.map((pcn) => (
                   <option key={pcn.id} value={pcn.id}>
                     {pcn.courseName} - {pcn.niveauName}

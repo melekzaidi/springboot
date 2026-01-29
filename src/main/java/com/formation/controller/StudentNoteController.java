@@ -19,10 +19,10 @@ public class StudentNoteController {
     private ProfessorNoteService professorNoteService;
 
     @GetMapping
-    public String viewMyNotes(Model model, Authentication authentication) {
+    public String viewMyRemarks(Model model, Authentication authentication) {
         String studentEmail = authentication.getName();
         List<ProfessorNoteDTO> notes = professorNoteService.getNotesForStudent(studentEmail);
-        model.addAttribute("pageTitle", "My Notes");
+        model.addAttribute("pageTitle", "Mes Remarques");
         model.addAttribute("notes", notes);
         return "student-notes/my-notes";
     }
