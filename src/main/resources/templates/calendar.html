@@ -200,6 +200,12 @@
             <a sec:authorize="hasRole('PROF')" th:href="@{/sessions/new}" class="btn btn-primary btn-sm me-3 shadow-sm">
                 <i class="fas fa-plus me-1"></i> Nouvelle Séance
             </a>
+            <a sec:authorize="hasRole('STUDENT')" th:href="@{/student-notes}" class="btn btn-info btn-sm me-3 shadow-sm">
+                <i class="fas fa-sticky-note me-1"></i> My Notes
+            </a>
+            <a sec:authorize="hasRole('PROF')" th:href="@{/professor-notes}" class="btn btn-success btn-sm me-3 shadow-sm">
+                <i class="fas fa-edit me-1"></i> Notes Étudiants
+            </a>
             <div class="dropdown">
                 <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="userMenu"
                     data-bs-toggle="dropdown">

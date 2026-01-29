@@ -76,6 +76,12 @@ public class ProfServiceImpl implements ProfService {
     }
 
     @Override
+    public Prof getProfByEmail(String email) {
+        return profRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Professeur non trouvé avec l'email: " + email));
+    }
+
+    @Override
     public List<Prof> getAllProfs() {
         return profRepository.findAllByOrderByNomAsc();
     }

@@ -14,4 +14,6 @@ public interface CourseNiveauService {
     boolean existsByCourseAndNiveau(Course course, Niveau niveau);
     List<CourseNiveau> getByCourse(Course course);
     List<CourseNiveau> getByNiveau(Niveau niveau);
+    List<CourseNiveau> getCourseNiveauxByCourseId(Long courseId);
+    List<CourseNiveau> getCourseNiveauxByNiveauId(Long niveauId);
 }

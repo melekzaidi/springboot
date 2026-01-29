@@ -52,7 +52,7 @@ public class SessionController {
         List<Session> sessions = calendarService.getAllSessions();
         model.addAttribute("sessions", sessions);
         model.addAttribute("pageTitle", "Gestion des Séances");
-        return "sessions/list";
+        return "sessions/list-with-layout";
     }
 
     @GetMapping("/new")

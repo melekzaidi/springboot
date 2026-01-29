@@ -110,4 +110,10 @@ public class StudentServiceImpl implements StudentService {
     public Optional<Student> findByMatricule(String matricule) {
         return studentRepository.findByMatricule(matricule);
     }
+
+    @Override
+    public Student getStudentByEmail(String email) {
+        return studentRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Étudiant non trouvé avec l'email: " + email));
+    }
 }

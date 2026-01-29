@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Affectations - Notes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{layout :: layout(~{::main})}">
+        <main>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                                    Mes Affectations - Gestion des Notes
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span th:text="${success}"></span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <span th:text="${error}"></span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+
+                                <div class="row">
+                                    <div th:each="assignment : ${profCourseNiveaux}" class="col-md-6 col-lg-4 mb-4">
+                                        <div class="card h-100 shadow-sm border-start border-primary border-4">
+                                            <div class="card-header bg-light">
+                                                <h5 class="card-title mb-1">
+                                                    <i class="fas fa-book text-primary me-2"></i>
+                                                    <span th:text="${assignment.courseNiveau.course.nom}"></span>
+                                                </h5>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-layer-group me-1"></i>
+                                                    <span th:text="${assignment.courseNiveau.niveau.nom}"></span>
+                                                </small>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <div class="row text-center">
+                                                        <div class="col-6">
+                                                            <div class="border-end">
+                                                                <h6 class="text-muted mb-1">Cours</h6>
+                                                                <span class="h5 text-primary" th:text="${assignment.courseNiveau.course.nom}"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <h6 class="text-muted mb-1">Niveau</h6>
+                                                            <span class="h5 text-success" th:text="${assignment.courseNiveau.niveau.nom}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <small class="text-muted">
+                                                    Professeur: <span th:text="${assignment.prof.prenom + ' ' + assignment.prof.nom}"></span>
+                                                </small>
+                                            </div>
+                                            <div class="card-footer bg-transparent">
+                                                <div class="d-grid gap-2">
+                                                    <a th:href="@{/grades/by-prof-course-niveau/{id}(id=${assignment.id})}" 
+                                                       class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-chart-bar me-1"></i>
+                                                        Voir le résumé
+                                                    </a>
+                                                    <a th:href="@{/grades/form(profCourseNiveauId=${assignment.id})}" 
+                                                       class="btn btn-outline-success btn-sm">
+                                                        <i class="fas fa-plus me-1"></i>
+                                                        Ajouter une note
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div th:if="${#lists.isEmpty(profCourseNiveaux)}" class="col-12">
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-chalkboard-teacher fa-3x text-muted mb-3"></i>
+                                            <h4 class="text-muted">Aucune affectation trouvée</h4>
+                                            <p class="text-muted">Vous n'avez pas encore d'affectations de cours pour gérer les notes.</p>
+                                            <p class="text-muted">Contactez l'administrateur pour obtenir des affectations.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

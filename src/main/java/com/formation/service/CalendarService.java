@@ -62,7 +62,6 @@ public class CalendarService {
         attendanceRepository.save(attendance);
     }
 
-
     @Transactional
     public void saveSession(Session session) {
         sessionRepository.save(session);

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Mes Notes - Centre de Formation</title>
+</head>
+<body>
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-user-graduate me-2"></i>Mes Notes
+                        </h3>
+                        <p class="mb-0 text-muted" th:if="${student != null}">
+                            <strong th:text="${student.prenom + ' ' + student.nom}">Nom Prénom</strong> - 
+                            Matricule: <span th:text="${student.matricule}">Matricule</span>
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong> Calcul de la moyenne:</strong> 0.3 × DS + 0.7 × Examen
+                        </div>
+
+                        <!-- Grades Summary by Subject -->
+                        <div th:if="${gradesSummaries != null and !gradesSummaries.empty}">
+                            <h5 class="mb-3">Résumé par Matière</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Matière</th>
+                                            <th>Niveau</th>
+                                            <th>Professeur</th>
+                                            <th>Note DS</th>
+                                            <th>Note Examen</th>
+                                            <th>Moyenne Générale</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="summary : ${gradesSummaries}">
+                                            <td>
+                                                <strong th:text="${summary.courseName}">Matière</strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info" th:text="${summary.niveauName}">Niveau</span>
+                                            </td>
+                                            <td th:text="${summary.profPrenom + ' ' + summary.profNom}">Professeur</td>
+                                            <td>
+                                                <span th:if="${summary.noteDS != null}" 
+                                                      class="badge bg-info fs-6" 
+                                                      th:text="${summary.noteDS + '/20'}">Note DS</span>
+                                                <span th:unless="${summary.noteDS != null}" class="text-muted">-</span>
+                                            </td>
+                                            <td>
+                                                <span th:if="${summary.noteExamen != null}" 
+                                                      class="badge bg-warning fs-6" 
+                                                      th:text="${summary.noteExamen + '/20'}">Note Examen</span>
+                                                <span th:unless="${summary.noteExamen != null}" class="text-muted">-</span>
+                                            </td>
+                                            <td>
+                                                <span th:if="${summary.moyenneGenerale != null}" 
+                                                      class="badge fs-6"
+                                                      th:classappend="${summary.moyenneGenerale >= 10} ? 'bg-success' : 'bg-danger'"
+                                                      th:text="${#numbers.formatDecimal(summary.moyenneGenerale, 1, 2) + '/20'}">Moyenne</span>
+                                                <span th:unless="${summary.moyenneGenerale != null}" class="text-muted">-</span>
+                                            </td>
+                                            <td>
+                                                <span th:if="${summary.moyenneGenerale != null}" 
+                                                      class="badge"
+                                                      th:classappend="${summary.moyenneGenerale >= 10} ? 'bg-success' : 'bg-danger'"
+                                                      th:text="${summary.moyenneGenerale >= 10} ? 'Admis' : 'Échec'">Statut</span>
+                                                <span th:unless="${summary.moyenneGenerale != null}" class="badge bg-secondary">En cours</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Statistics -->
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <div class="card bg-primary text-white">
+                                        <div class="card-body text-center">
+                                            <h5>Total Matières</h5>
+                                            <h3 th:text="${gradesSummaries.size()}">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body text-center">
+                                            <h5>Admis</h5>
+                                            <h3 th:text="${#lists.size(#lists.select(gradesSummaries, 'moyenneGenerale != null and moyenneGenerale >= 10'))}">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-danger text-white">
+                                        <div class="card-body text-center">
+                                            <h5>Échec</h5>
+                                            <h3 th:text="${#lists.size(#lists.select(gradesSummaries, 'moyenneGenerale != null and moyenneGenerale < 10'))}">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-secondary text-white">
+                                        <div class="card-body text-center">
+                                            <h5>En cours</h5>
+                                            <h3 th:text="${#lists.size(#lists.select(gradesSummaries, 'moyenneGenerale == null'))}">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Grades -->
+                        <div th:if="${allGrades != null and !allGrades.empty}" class="mt-5">
+                            <h5 class="mb-3">Détail de toutes mes Notes</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Matière</th>
+                                            <th>Niveau</th>
+                                            <th>Type</th>
+                                            <th>Note</th>
+                                            <th>Coefficient</th>
+                                            <th>Date</th>
+                                            <th>Commentaire</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="grade : ${allGrades}">
+                                            <td th:text="${grade.courseName}">Matière</td>
+                                            <td th:text="${grade.niveauName}">Niveau</td>
+                                            <td>
+                                                <span class="badge" 
+                                                      th:classappend="${grade.gradeType.name() == 'DS'} ? 'bg-info' : 'bg-warning'"
+                                                      th:text="${grade.gradeType.displayName}">Type</span>
+                                            </td>
+                                            <td><strong th:text="${grade.note + '/20'}">Note</strong></td>
+                                            <td th:text="${grade.coefficient}">Coeff</td>
+                                            <td th:text="${#temporals.format(grade.dateEvaluation, 'dd/MM/yyyy')}">Date</td>
+                                            <td th:text="${grade.commentaire ?: '-'}">Commentaire</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- No grades message -->
+                        <div th:if="${(gradesSummaries == null or gradesSummaries.empty) and (allGrades == null or allGrades.empty)}" 
+                             class="text-center py-5">
+                            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">Aucune note disponible</h4>
+                            <p class="text-muted">Vos notes apparaîtront ici une fois qu'elles seront saisies par vos professeurs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

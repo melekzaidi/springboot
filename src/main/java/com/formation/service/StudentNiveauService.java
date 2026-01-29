@@ -13,4 +13,5 @@ public interface StudentNiveauService {
     boolean existsByStudentAndNiveau(Student student, Niveau niveau);
     List<StudentNiveau> getByStudent(Student student);
     List<StudentNiveau> getByNiveau(Niveau niveau);
+    List<StudentNiveau> getStudentNiveauxByCourseNiveauId(Long courseNiveauId);
 }

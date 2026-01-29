@@ -28,4 +28,7 @@ public interface StudentService {
 
     // Find by matricule
     Optional<Student> findByMatricule(String matricule);
+
+    // Find by email
+    Student getStudentByEmail(String email);
 }

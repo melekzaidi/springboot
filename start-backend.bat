@@ -1,0 +1,3 @@
+@echo off
+echo Démarrage du backend Spring Boot...
+mvn spring-boot:run

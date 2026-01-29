@@ -14,5 +14,7 @@ public interface CourseNiveauRepository extends JpaRepository<CourseNiveau, Long
     Optional<CourseNiveau> findByCourseAndNiveau(Course course, Niveau niveau);
     List<CourseNiveau> findByCourse(Course course);
     List<CourseNiveau> findByNiveau(Niveau niveau);
+    List<CourseNiveau> findByCourseId(Long courseId);
+    List<CourseNiveau> findByNiveauId(Long niveauId);
     boolean existsByCourseAndNiveau(Course course, Niveau niveau);
 }

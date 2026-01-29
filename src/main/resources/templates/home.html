@@ -154,6 +154,16 @@
                             <i class="fas fa-chalkboard-teacher"></i> Professeurs
                         </a>
                     </li>
+                    <li class="nav-item" sec:authorize="hasRole('PROF')">
+                        <a class="nav-link" href="/professor-notes">
+                            <i class="fas fa-sticky-note"></i> Notes Étudiants
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('STUDENT')">
+                        <a class="nav-link" href="/student-notes">
+                            <i class="fas fa-graduation-cap"></i> My Notes
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/course-niveaux">
                             <i class="fas fa-link"></i> Cours-Niveaux
@@ -558,6 +568,14 @@
                         <a href="/courses/new" class="list-group-item list-group-item-action">
                             <i class="fas fa-book-medical text-info me-2"></i>
                             Créer un nouveau cours
+                        </a>
+                        <a sec:authorize="hasRole('PROF')" href="/professor-notes" class="list-group-item list-group-item-action">
+                            <i class="fas fa-sticky-note text-warning me-2"></i>
+                            Gérer les notes étudiants
+                        </a>
+                        <a sec:authorize="hasRole('STUDENT')" href="/student-notes" class="list-group-item list-group-item-action">
+                            <i class="fas fa-graduation-cap text-info me-2"></i>
+                            My Notes
                         </a>
                         <a href="/course-niveaux/new" class="list-group-item list-group-item-action">
                             <i class="fas fa-handshake text-purple me-2"></i>

@@ -17,6 +17,12 @@ public class ProfCourseNiveauServiceImpl implements ProfCourseNiveauService {
     @Autowired
     private ProfCourseNiveauRepository profCourseNiveauRepository;
 
+    @Autowired
+    private ProfService profService;
+
+    @Autowired
+    private CourseNiveauService courseNiveauService;
+
     @Override
     public ProfCourseNiveau saveProfCourseNiveau(ProfCourseNiveau profCourseNiveau) {
         return profCourseNiveauRepository.save(profCourseNiveau);
@@ -52,5 +58,17 @@ public class ProfCourseNiveauServiceImpl implements ProfCourseNiveauService {
     @Override
     public List<ProfCourseNiveau> getByCourseNiveau(CourseNiveau courseNiveau) {
         return profCourseNiveauRepository.findByCourseNiveau(courseNiveau);
+    }
+
+    @Override
+    public List<ProfCourseNiveau> getProfCourseNiveauxByProfId(Long profId) {
+        Prof prof = profService.getProfById(profId);
+        return getByProf(prof);
+    }
+
+    @Override
+    public List<ProfCourseNiveau> getProfCourseNiveauxByCourseNiveauId(Long courseNiveauId) {
+        CourseNiveau courseNiveau = courseNiveauService.getCourseNiveauById(courseNiveauId);
+        return getByCourseNiveau(courseNiveau);
     }
 }

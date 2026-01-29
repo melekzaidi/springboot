@@ -62,4 +62,14 @@ public class CourseNiveauServiceImpl implements CourseNiveauService {
     public List<CourseNiveau> getByNiveau(Niveau niveau) {
         return courseNiveauRepository.findByNiveau(niveau);
     }
+
+    @Override
+    public List<CourseNiveau> getCourseNiveauxByCourseId(Long courseId) {
+        return courseNiveauRepository.findByCourseId(courseId);
+    }
+
+    @Override
+    public List<CourseNiveau> getCourseNiveauxByNiveauId(Long niveauId) {
+        return courseNiveauRepository.findByNiveauId(niveauId);
+    }
 }

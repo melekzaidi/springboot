@@ -1,5 +1,6 @@
 package com.formation.service;
 
+import com.formation.entity.CourseNiveau;
 import com.formation.entity.Niveau;
 import com.formation.entity.Student;
 import com.formation.entity.StudentNiveau;
@@ -16,6 +17,9 @@ public class StudentNiveauServiceImpl implements StudentNiveauService {
 
     @Autowired
     private StudentNiveauRepository studentNiveauRepository;
+
+    @Autowired
+    private CourseNiveauService courseNiveauService;
 
     @Override
     public StudentNiveau saveStudentNiveau(StudentNiveau studentNiveau) {
@@ -52,5 +56,11 @@ public class StudentNiveauServiceImpl implements StudentNiveauService {
     @Override
     public List<StudentNiveau> getByNiveau(Niveau niveau) {
         return studentNiveauRepository.findByNiveau(niveau);
+    }
+
+    @Override
+    public List<StudentNiveau> getStudentNiveauxByCourseNiveauId(Long courseNiveauId) {
+        CourseNiveau courseNiveau = courseNiveauService.getCourseNiveauById(courseNiveauId);
+        return getByNiveau(courseNiveau.getNiveau());
     }
 }

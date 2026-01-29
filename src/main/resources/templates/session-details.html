@@ -87,6 +87,21 @@
 
         <!-- Section Professeur (Gestion des absences) -->
         <div sec:authorize="hasRole('PROF')">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="alert alert-info d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Actions disponibles:</strong> Gérez les présences et attribuez des notes à vos étudiants.
+                        </div>
+                        <a th:href="@{/grades/by-prof-course-niveau/{id}(id=${courseSession.profCourseNiveau.id})}" 
+                           class="btn btn-success">
+                            <i class="bi bi-clipboard-check"></i> Gérer les Notes
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
             <div class="card">
                 <div class="card-header bg-light">
                     <h4 class="mb-0">Gestion des présences</h4>

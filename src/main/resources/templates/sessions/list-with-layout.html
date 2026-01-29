@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Gestion des Séances</title>
+</head>
+<body>
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">Gestion des Séances</h3>
+                        <div>
+                            <a href="/grades/my-assignments" class="btn btn-info me-2" sec:authorize="hasRole('PROF')">
+                                <i class="fas fa-clipboard-list"></i> Mes Notes
+                            </a>
+                            <a href="/sessions/new" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Nouvelle Séance
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${successMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span th:text="${errorMessage}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <div class="alert alert-info" sec:authorize="hasRole('PROF')">
+                            <i class="fas fa-info-circle"></i>
+                            <strong> Conseil:</strong> Après vos séances, n'oubliez pas d'attribuer les notes DS et Examen à vos étudiants via 
+                            <a href="/grades/my-assignments" class="alert-link">Mes Notes</a>.
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Cours</th>
+                                        <th>Professeur</th>
+                                        <th>Date et Heure</th>
+                                        <th>Niveau</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="courseSession, stat : ${sessions}">
+                                        <td th:text="${stat.index + 1}">1</td>
+                                        <td th:text="${courseSession.profCourseNiveau.courseNiveau.course.nom}">Cours</td>
+                                        <td th:text="${courseSession.profCourseNiveau.prof.nomComplet}">Professeur</td>
+                                        <td>
+                                            <span th:text="${#temporals.format(courseSession.startDateTime, 'dd/MM/yyyy HH:mm')}">Date</span>
+                                            -
+                                            <span th:text="${#temporals.format(courseSession.endDateTime, 'HH:mm')}">Fin</span>
+                                        </td>
+                                        <td th:text="${courseSession.profCourseNiveau.courseNiveau.niveau.nom}">Niveau</td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a th:href="@{/session/{id}(id=${courseSession.id})}"
+                                                   class="btn btn-outline-info" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a th:href="@{/grades/by-prof-course-niveau/{id}(id=${courseSession.profCourseNiveau.id})}"
+                                                   class="btn btn-outline-success" title="Gérer les notes" sec:authorize="hasAnyRole('ADMIN', 'PROF')">
+                                                    <i class="fas fa-clipboard-list"></i>
+                                                </a>
+                                                <a th:href="@{/sessions/edit/{id}(id=${courseSession.id})}"
+                                                   class="btn btn-outline-warning" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a th:href="@{/sessions/delete/{id}(id=${courseSession.id})}"
+                                                   class="btn btn-outline-danger" title="Supprimer"
+                                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette séance ?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(sessions)}">
+                                        <td colspan="6" class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                                                <h5>Aucune séance trouvée</h5>
+                                                <a href="/sessions/new" class="btn btn-primary mt-2">
+                                                    <i class="fas fa-plus me-1"></i>Ajouter une séance
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
